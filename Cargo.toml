@@ -1,0 +1,22 @@
+[package]
+name = "net"
+version = "0.1.0"
+authors = ["Automata Team"]
+edition = "2021"
+license = "Apache-2.0"
+
+[features]
+default = ["std"]
+std = ["rustls/std", "webpki/std", "glog/std", "net2/std", "libc/std"]
+tstd = ["sgxlib/tstd", "rustls/tstd", "webpki/tstd", "glog/tstd", "net2/tstd", "libc/tstd"]
+
+[dependencies]
+sgxlib = { git = "https://github.com/automata-network/sgxlib", default-features = false }
+glog = { git = "https://github.com/automata-network/glog-rs", default-features = false }
+
+rustls = { git = "https://github.com/automata-network/sgxlib-thirdparty", default-features = false }
+webpki = { git = "https://github.com/automata-network/sgxlib-thirdparty", default-features = false }
+net2 = { git = "https://github.com/automata-network/sgxlib-thirdparty", default-features = false }
+libc = { git = "https://github.com/automata-network/sgxlib-thirdparty", default-features = false }
+
+lazy_static = { version = "1.4.0", default-features = false, features = ["spin_no_std"] }
