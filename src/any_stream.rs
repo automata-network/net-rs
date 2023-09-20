@@ -79,8 +79,8 @@ pub struct AnyStreamBuilder {
 impl AnyStreamBuilder {
     pub fn build(self) -> Result<AnyStream> {
         let mut stream = match self.proxy_protocol {
-            false => AnyStream::new(ProxyTcpStream::new(self.stream)),
-            true => AnyStream::new(self.stream),
+            true => AnyStream::new(ProxyTcpStream::new(self.stream)),
+            false => AnyStream::new(self.stream),
         };
         stream = if let Some(hostname) = self.tls_client {
             let mut config = ClientConfig::new();
