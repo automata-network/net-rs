@@ -6,6 +6,8 @@ use std::io::Result;
 use std::net::{Shutdown, SocketAddr, TcpStream};
 use std::sync::Arc;
 
+use crate::ProxyTcpStream;
+
 pub struct AnyStream(Box<dyn StreamTrait>);
 
 impl std::fmt::Debug for AnyStream {
@@ -69,14 +71,17 @@ impl AnyStream {
 
 pub struct AnyStreamBuilder {
     pub stream: TcpStream,
-    pub proxy: bool,
+    pub proxy_protocol: bool,
     pub tls_client: Option<String>,
     pub tls_server: Option<Arc<ServerConfig>>,
 }
 
 impl AnyStreamBuilder {
     pub fn build(self) -> Result<AnyStream> {
-        let mut stream = AnyStream::new(self.stream);
+        let mut stream = match self.proxy_protocol {
+            false => AnyStream::new(ProxyTcpStream::new(self.stream)),
+            true => AnyStream::new(self.stream),
+        };
         stream = if let Some(hostname) = self.tls_client {
             let mut config = ClientConfig::new();
             config
